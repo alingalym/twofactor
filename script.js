@@ -142,9 +142,9 @@ const provider = new ethers.providers.Web3Provider(window.ethereum, 97);
 let signer;
 let contract;
 const acc = [];
-//acc[0] = "user";
+acc[0] = "user";
 const pass = [];
-//pass[0]= "password";
+pass[0]= "password";
 let length = 0;
 
 //Запрашиваем аккаунты пользователя и подключаемся к первому аккаунту
@@ -170,6 +170,7 @@ function check_AA(usr, pswd) {
 	}
 	return false;
 }
+
 //Вызываем Login() в смарт-контракте и показываем результаты
 async function Login() {
   	const user = document.getElementById("user").value;
@@ -178,7 +179,7 @@ async function Login() {
   		if (check_AA(user,password)==true) {
 			const getTBNB = await contract.Login(user); 
 			//wait for contract execution
-			getTBNB.wait(3);
+			//getTBNB.wait(1);
 			if (getTBNB == true) {
 				document.getElementById("result").innerText = user;
 				document.getElementById("info").innerText = "Login is succesful!";
@@ -205,12 +206,21 @@ async function Register() {
 	const password = document.getElementById("password").value;
   	if (check_A(user)==true) {
 		document.getElementById("result").innerText = user;
-		document.getElementById("info").innerText = "This account is already existing!";
+		//document.getElementById("info").innerText = "This account is already existing!";
+		const setTBNB = await contract.Register(user);
+		if (setTBNB == true){
+			document.getElementById("result").innerText = user;
+			document.getElementById("info").innerText = "TBNB Account is added!";
+		}
+		else {
+			document.getElementById("result").innerText = user;
+			document.getElementById("info").innerText = "Account is not added: TBNB address is existing!";
+		}
   	}
   	else{
 		const setTBNB = await contract.Register(user); 
 		//wait for contract execution
-		setTBNB.wait(3);
+		//setTBNB.wait(1);
 		if (setTBNB == true){
 			acc[length]=user;
 			pass[length]=password;
@@ -228,7 +238,7 @@ async function Register() {
 
 async function UnRegister() {
 	const user = document.getElementById("user").value;
-	const password = document.getElementById("password").value;
+	//const password = document.getElementById("password").value;
 	if (check_A(user)!=true) {
 		document.getElementById("result").innerText = user;
 		document.getElementById("info").innerText = "This account is not existing!";
@@ -236,7 +246,7 @@ async function UnRegister() {
 	else{
 		const delTBNB = await contract.UnRegister(user); 
 		//wait for contract execution
-		delTBNB.wait(3);
+		//delTBNB.wait(1);
 		if (delTBNB == true){
 			length=length-1;
 			document.getElementById("result").innerText = user;
